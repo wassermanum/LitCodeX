@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Priority {
+  low
+  medium
+  high
+}
+
+enum Status {
+  new
+  in_progress
+  done
+  closed
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String?
+  quantity    Int?
+  unit        String?
+  priority    Priority    @default(medium)
+  status      Status      @default(new)
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  items       OrderItem[]
+}
+
+model Literature {
+  id         Int          @id @default(autoincrement())
+  type       String
+  title      String
+  sortOrder  Int
+  price      Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  orderItems OrderItem[]
+
+  @@unique([type, title])
+  @@index([sortOrder])
+}
+
+model OrderItem {
+  id           Int        @id @default(autoincrement())
+  orderId      Int
+  literatureId Int
+  quantity     Int
+  price        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  literature Literature @relation(fields: [literatureId], references: [id])
+
+  @@unique([orderId, literatureId])
+}

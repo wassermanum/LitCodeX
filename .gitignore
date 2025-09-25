@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+
+# Build outputs
+build/
+dist/
+.next/
+coverage/
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Local tooling
+.DS_Store
+.idea/
+.vscode/
